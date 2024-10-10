@@ -65,13 +65,13 @@ impl<K: EnrKey> Builder<K> {
 
     /// Adds an `ip` field to the `ENRBuilder`.
     pub fn ip4(&mut self, ip: Ipv4Addr) -> &mut Self {
-        self.add_value("ip", &ip.octets().as_ref());
+        self.add_value("ip", &ip.octets());
         self
     }
 
     /// Adds an `ip6` field to the `ENRBuilder`.
     pub fn ip6(&mut self, ip: Ipv6Addr) -> &mut Self {
-        self.add_value("ip6", &ip.octets().as_ref());
+        self.add_value("ip6", &ip.octets());
         self
     }
 

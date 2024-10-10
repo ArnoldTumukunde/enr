@@ -593,7 +593,7 @@ impl<K: EnrKey> Enr<K> {
     pub fn set_ip(&mut self, ip: IpAddr, key: &K) -> Result<Option<IpAddr>, Error> {
         match ip {
             IpAddr::V4(addr) => {
-                let prev_value = self.insert("ip", &addr.octets().as_ref(), key)?;
+                let prev_value = self.insert("ip", &addr.octets(), key)?;
                 if let Some(bytes) = prev_value {
                     if bytes.len() == 4 {
                         let mut v = [0_u8; 4];
@@ -603,7 +603,7 @@ impl<K: EnrKey> Enr<K> {
                 }
             }
             IpAddr::V6(addr) => {
-                let prev_value = self.insert("ip6", &addr.octets().as_ref(), key)?;
+                let prev_value = self.insert("ip6", &addr.octets(), key)?;
                 if let Some(bytes) = prev_value {
                     if bytes.len() == 16 {
                         let mut v = [0_u8; 16];
@@ -727,7 +727,7 @@ impl<K: EnrKey> Enr<K> {
                     if let Some(ip) = prev_ip {
                         self.content.insert("ip".into(), ip);
                     } else {
-                        self.content.remove(b"ip".as_ref());
+                        self.content.remove("ip".as_bytes().as_ref());
                     }
                     if let Some(udp) = prev_port {
                         self.content.insert(port_string, udp);
@@ -739,7 +739,7 @@ impl<K: EnrKey> Enr<K> {
                     if let Some(ip) = prev_ip {
                         self.content.insert("ip6".into(), ip);
                     } else {
-                        self.content.remove(b"ip6".as_ref());
+                        self.content.remove("ip6".as_bytes().as_ref());
                     }
                     if let Some(udp) = prev_port {
                         self.content.insert(port_v6_string, udp);
@@ -1886,7 +1886,7 @@ mod tests {
         for tcp in LOW_INT_PORTS {
             let mut enr = Enr::empty(&key).unwrap();
 
-            let res = enr.insert(b"tcp", &tcp.to_be_bytes().as_ref(), &key);
+            let res = enr.insert(b"tcp", &tcp.to_be_bytes(), &key);
             if u8::try_from(tcp).is_ok() {
                 assert_eq!(res.unwrap_err().to_string(), "invalid rlp data");
             } else {
